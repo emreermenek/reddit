@@ -1,5 +1,6 @@
 import ffmpeg
 import whisper
+import random
 
 
 def generate_subtitles(audio_path: str, ass_path: str):
@@ -42,10 +43,10 @@ def format_ass_timestamp(seconds: float):
 
 def add_audio_and_subtitles(video_path: str, audio_path: str, subtitle_path: str, output_path: str, duration : int):
     """Adds audio and burns styled subtitles into video"""
-    
+    selected_music = random.randint(1,5)
     input_video = ffmpeg.input(video_path)
     input_audio = ffmpeg.input(audio_path)
-    input_music_audio = ffmpeg.input("horror_background_music.mp3")
+    input_music_audio = ffmpeg.input(f"musics/{selected_music}.mp3")
     
     
     # Altyazı stilleriyle birlikte videoya işle

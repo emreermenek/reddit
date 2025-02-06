@@ -1,13 +1,14 @@
 from moviepy.editor import VideoFileClip, TextClip, CompositeVideoClip
 from moviepy.config import change_settings
+import random
 
 
 
 def create_video(duration : int, counter : int):
     change_settings({"IMAGEMAGICK_BINARY": r"C:\\Program Files\\ImageMagick-7.1.1-Q16-HDRI\\magick.exe"})
-
+    selected_video = random.randint(1,5)
     # Load the video
-    clip = VideoFileClip("video.mp4")
+    clip = VideoFileClip(f"clips/{selected_video}.mp4")
     # Generate a text clip  
     watermark = TextClip('@redstories_s', fontsize=50, color='red')  
     
