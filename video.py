@@ -13,7 +13,7 @@ def create_video(duration : int, counter : int):
     watermark = TextClip('@redstories_s', fontsize=50, color='red')  
     
     # setting position of text in the center and duration will be 10 seconds  
-    watermark = watermark.set_pos(("right","bottom")).set_duration(duration+2).set_opacity(0.5)  
+    watermark = watermark.set_pos(("right","bottom")).set_duration(duration+2).set_opacity(0.3)  
 
     # Clip the video to the first 10 seconds
     clip = clip.subclip(0, duration+2)

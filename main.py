@@ -4,8 +4,7 @@ import subprocess
 import reddit as rd
 import video as vid
 import subtitle as sub
-
-
+import upload as up
 from mutagen.mp3 import MP3
 
 
@@ -31,7 +30,7 @@ counter = 1
 
 
 for story in filtered_stories:
-    if(counter ==2):
+    if(counter == 6):
         break
     print("creating audio")
  # creating audio   
@@ -63,6 +62,8 @@ for story in filtered_stories:
     #creating subtitle and merging everyting
     print("creating output")
     sub.usage(counter, duration)
+
+    up.upload_video(f'output/{counter}.mp4', story)
     
     
     counter += 1

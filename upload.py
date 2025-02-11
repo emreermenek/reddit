@@ -1,8 +1,6 @@
 import os
 import json
 import pickle
-import time
-import google.auth
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
@@ -47,23 +45,45 @@ def generate_tags():
     tags = response.text.strip().split('\n')
     return tags
 
+# Gemini API'si ile title oluşturma
+def generate_title(story):
+    api_key = load_api_key()
+    genai.configure(api_key=api_key)
+    model = genai.GenerativeModel("gemini-2.0-flash")
+    response = model.generate_content(f"Generate a title for a youtube shorts video which is telling this story: \n{story}\n just write one title not anyting else")
+    title = response.text.strip().split('\n')
+    return title
+
+# Gemini API'si ile description oluşturma
+def generate_description(story):
+    api_key = load_api_key()
+    genai.configure(api_key=api_key)
+    model = genai.GenerativeModel("gemini-2.0-flash")
+    response = model.generate_content(f"Generate a description for a youtube shorts video which is telling this story: \n{story}\n just write the description not anyting else")
+    description = response.text.strip().split('\n')
+    return description
+
 # Video yükleme fonksiyonu
-def upload_video(file, title, description, category_id=22, tags=None):
+def upload_video(file, story):
     youtube = get_authenticated_service()
-    
+
+    #gemini
+    tags = generate_tags()
+    title = generate_title(story)
+    description = generate_description(story)
     # Medya dosyasını yükle
     media = MediaFileUpload(file, mimetype='video/*', resumable=True)
     
     # Video özelliklerini ayarla
     request_body = {
         'snippet': {
-            'title': title,
-            'description': description,
-            'categoryId': category_id,
-            'tags': tags or generate_tags()
+            'title': title[0],
+            'description': description[0],
+            'categoryId': 22,
+            'tags': tags 
         },
         'status': {
-            'privacyStatus': 'private',  # Video gizliliği: 'public', 'private', 'unlisted'
+            'privacyStatus': 'public',  # Video gizliliği: 'public', 'private', 'unlisted'
         }
     }
     
@@ -76,6 +96,6 @@ def upload_video(file, title, description, category_id=22, tags=None):
     response = request.execute()
     print(f"Video uploaded: {response['id']}")
 
-# Örnek kullanım
-if __name__ == "__main__":
-    upload_video('1.mp4', 'Test Video', 'This is a test description')
+# # Örnek kullanım
+# if __name__ == "__main__":
+#     upload_video('1.mp4', 'Test Video', 'This is a test description')

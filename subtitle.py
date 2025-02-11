@@ -20,7 +20,7 @@ ScaledBorderAndShadow: yes
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Default,Arial,42,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,2,0,2,10,10,10,0
+Style: Default,KOMIKAX,24,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,1,0,0,0,100,100,0,0,1,3,0,2,10,10,50,0
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
@@ -53,7 +53,7 @@ def add_audio_and_subtitles(video_path: str, audio_path: str, subtitle_path: str
     video_with_subs = input_video.filter(
         "subtitles", 
         subtitle_path,
-        force_style="Alignment=2,Fontsize=24,MarginV=70"  # Ek stil ayarları
+        force_style="Alignment=2,Fontname=KOMIKAX,Fontsize=24,Outline=3,MarginV=120" # Ek stil ayarları
     )
 
     # Videodaki mevcut sesi al
@@ -71,7 +71,7 @@ def add_audio_and_subtitles(video_path: str, audio_path: str, subtitle_path: str
         output_path,
         vcodec="libx264",
         acodec="aac",
-        audio_bitrate="192k",
+        #audio_bitrate="192k",
         format="mp4",
         **{"map": "0:v:0", "map": "1:a:0"}
     )

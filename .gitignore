@@ -2,20 +2,18 @@
 client.json
 metadata.json
 config.py
+token.pickle
+config.json
 .env
 *.key
-
-# Local media files
-video.mp4
-horror_background_music.mp3
-result.mp4
-output.mp4
 
 # Generated directories
 videos/
 subtitles/
 output/
 audios/
+clips/
+musics/
 __pycache__/
 *.pyc
 *.pyo
