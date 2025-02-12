@@ -1,0 +1,29 @@
+# Sensitive files (API keys, credentials)
+client.json
+metadata.json
+config.py
+token.pickle
+config.json
+.env
+*.key
+
+# Generated directories
+videos/
+subtitles/
+output/
+audios/
+clips/
+musics/
+__pycache__/
+*.pyc
+*.pyo
+
+# Editor/IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# MP4 ve MP3 dosyalarını hariç tut
+*.mp4
+*.mp3
