@@ -14,13 +14,14 @@ def initialize_reddit_client():
 def fetch_and_filter():
     reddit = initialize_reddit_client();
     # Settings
-    #subreddit_name = "scarystories"
-    subreddit_name = "TrueHorrorStories"
+    #subreddit_name = "TrueHorrorStories" # guzel reddit 2. gün aynı hikayeleri buldu
+    #subreddit_name = "scarystories" # 1 tane buldu
+    subreddit_name = "creepypasta"
     #subreddit_name = 'shortscarystories'
-    #subreddit_name = "nosleep"
+    #subreddit_name = "nosleep" # kısa hikaye bulunmuyor
     max_word_count = 400  # Maximum word count for filtering
     min_word_count = 100
-    hot_limit = 100        # Limit on the number of "hot" posts to fetch
+    hot_limit = 150        # Limit on the number of "hot" posts to fetch
     subreddit = reddit.subreddit(subreddit_name)
     filtered_stories = []
     for submission in subreddit.hot(limit=hot_limit):

@@ -27,8 +27,6 @@ urls = []
 counter = 1
 
 
-
-
 for story in filtered_stories:
     if(counter == 6):
         break

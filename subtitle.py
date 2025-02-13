@@ -59,7 +59,7 @@ def add_audio_and_subtitles(video_path: str, audio_path: str, subtitle_path: str
     # Videodaki mevcut sesi al
     original_audio = input_audio.audio
     #new_audio = input_music_audio.audio.filter("volume", 0.3)
-    new_audio = input_music_audio.audio.filter("atrim", duration=duration+2).filter("volume", 0.3)
+    new_audio = input_music_audio.audio.filter("atrim", duration=duration+2).filter("volume", 0.2)
     
     # İki sesi birleştir
     mixed_audio = ffmpeg.filter([original_audio, new_audio], "amix", inputs=2, duration="longest", dropout_transition=2)
