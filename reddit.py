@@ -14,15 +14,22 @@ def initialize_reddit_client():
 
 # Fetch and filter hot stories
 def fetch_and_filter():
-    reddit = initialize_reddit_client();
-    # Settings
-    #subreddit_name = "scarystories"
-    subreddit_name = "TrueHorrorStories"
-    #subreddit_name = 'shortscarystories'
-    #subreddit_name = "nosleep"
+    reddit = initialize_reddit_client()
+    
+    # Load subreddit names from JSON file
+    with open('subreddits.json', 'r') as file:
+        subreddits = json.load(file)
+    
+    # Select a random subreddit name
+    subreddit_name = random.choice(subreddits)
+    subreddits.remove(subreddit_name)
+
+    with open('subreddits.json', 'w') as file:
+        json.dump(subreddits, file, indent=4)
+
     max_word_count = 400  # Maximum word count for filtering
     min_word_count = 100
-    hot_limit = 150        # Limit on the number of "hot" posts to fetch
+    hot_limit = 100        # Limit on the number of "hot" posts to fetch
     subreddit = reddit.subreddit(subreddit_name)
     filtered_stories = []
     for submission in subreddit.hot(limit=hot_limit):
