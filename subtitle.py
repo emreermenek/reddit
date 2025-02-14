@@ -20,7 +20,7 @@ ScaledBorderAndShadow: yes
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Default,KOMIKAX,24,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,1,0,0,0,100,100,0,0,1,3,0,2,10,10,50,0
+Style: Default,Montserrat ExtraBold,22,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,1,0,0,0,100,100,0,0,1,3,0,5,10,10,50,0
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
@@ -30,7 +30,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             for word_info in segment.get("words", []):
                 start = word_info["start"]
                 end = word_info["end"]
-                word = word_info["word"].strip()
+                word = word_info["word"].strip().upper()
                 
                 f.write(f"Dialogue: 0,{format_ass_timestamp(start)},{format_ass_timestamp(end)},Default,,0,0,0,,{word}\\N\n")
 
@@ -53,14 +53,13 @@ def add_audio_and_subtitles(video_path: str, audio_path: str, subtitle_path: str
     video_with_subs = input_video.filter(
         "subtitles", 
         subtitle_path,
-        force_style="Alignment=2,Fontname=KOMIKAX,Fontsize=24,Outline=3,MarginV=120" # Ek stil ayarları
+        #force_style="Alignment=2,Fontname=,Fontsize=18,Outline=3,MarginV=120" # Ek stil ayarları
     )
 
     # Videodaki mevcut sesi al
     original_audio = input_audio.audio
     #new_audio = input_music_audio.audio.filter("volume", 0.3)
-    new_audio = input_music_audio.audio.filter("atrim", duration=duration+2).filter("volume", 0.2)
-    
+    new_audio = input_music_audio.audio.filter("atrim", duration=duration+2).filter("volume", 0.1)
     # İki sesi birleştir
     mixed_audio = ffmpeg.filter([original_audio, new_audio], "amix", inputs=2, duration="longest", dropout_transition=2)
     
@@ -69,7 +68,10 @@ def add_audio_and_subtitles(video_path: str, audio_path: str, subtitle_path: str
         video_with_subs,
         mixed_audio,
         output_path,
-        vcodec="libx264",
+        vcodec="h264_nvenc",  # NVENC hızlandırma
+        preset="p4",  # Daha hızlı encoding (Alternatif: "p7" daha kaliteli ama yavaş)
+        rc="vbr",  # Değişken bit hızı (daha verimli)
+        #vcodec="libx264", #cpu kullanmak icin codec
         acodec="aac",
         #audio_bitrate="192k",
         format="mp4",

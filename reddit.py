@@ -22,7 +22,7 @@ def fetch_and_filter():
     
     # Select a random subreddit name
     subreddit_name = random.choice(subreddits)
-    subreddits.remove(subreddit_name)
+    #subreddits.remove(subreddit_name)
 
     with open('subreddits.json', 'w') as file:
         json.dump(subreddits, file, indent=4)
@@ -40,8 +40,8 @@ def fetch_and_filter():
                 'selftext': submission.selftext,  # Full selftext
                 'url': submission.url
             })
-    print(subreddit_name)
-    print(filtered_stories)
+    #print(subreddit_name)
+    #print(filtered_stories)
     return filtered_stories
 
 fetch_and_filter()

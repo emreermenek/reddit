@@ -63,6 +63,14 @@ def generate_description(story):
     description = response.text.strip().split('\n')
     return description
 
+#story kontrolü
+def check_story(story):
+    api_key = load_api_key()
+    genai.configure(api_key=api_key)
+    model = genai.GenerativeModel("gemini-2.0-flash")
+    response = model.generate_content(f"look at this reddit post:{story}\nif it is a story then return True, if post is someting else return False, just write True or False not anything else")
+    isStory = response.text.strip().split('\n')
+    return isStory
 # Video yükleme fonksiyonu
 def upload_video(file, story):
     youtube = get_authenticated_service()

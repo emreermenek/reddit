@@ -1,52 +1,52 @@
 import os
-from gtts import gTTS
-import subprocess
 import reddit as rd
 import video as vid
 import subtitle as sub
 import upload as up
 from mutagen.mp3 import MP3
+import shutil
+import voice as vo
+from TTS.api import TTS
 
-
-if not os.path.exists('audios'):
-    os.makedirs('audios')
+# Klasörler varsa sil
+if os.path.exists('audios'):
+    shutil.rmtree('audios')  # Klasörü ve içindekileri sil
     
-if not os.path.exists('videos'):
-    os.makedirs('videos')
+if os.path.exists('videos'):
+    shutil.rmtree('videos')
     
-if not os.path.exists('subtitles'):
-    os.makedirs('subtitles')
+if os.path.exists('subtitles'):
+    shutil.rmtree('subtitles')
     
-if not os.path.exists('output'):
-    os.makedirs('output')
+if os.path.exists('output'):
+    shutil.rmtree('output')
 
+# Yeniden oluştur
+os.makedirs('audios')
+os.makedirs('videos')
+os.makedirs('subtitles')
+os.makedirs('output')
 
+#python surumu 3.11.6 ya dusurdum
 filtered_stories = rd.fetch_and_filter()
 
 urls = []
 counter = 1
 
+tts = vo.initialize_tts()
 
 for story in filtered_stories:
     if(counter == 6):
         break
+    if up.check_story(story)[0] == "False":
+            continue
+
+
+    
     print("creating audio")
  # creating audio   
     text = story['selftext']
-    language = 'en'
-    speech = gTTS(text=text, lang=language, slow=False)
-
-# Saving the converted audio in an mp3 file
-    speech.save(f"audios/{counter}.mp3")
-
-# Use ffmpeg to speed up the audio by 1.7x
-    input_file = f"audios/{counter}.mp3"
-    output_file = f"audios/{counter}_fast.mp3"
-    subprocess.run(['ffmpeg', '-i', input_file, '-filter:a', 'atempo=1.3', output_file])
-
-    os.remove(input_file)
-
-    os.rename(output_file, input_file)
+    vo.create_audio(text, counter, tts)
     
     #creating video by looking how long audio is
 
@@ -61,7 +61,9 @@ for story in filtered_stories:
     print("creating output")
     sub.usage(counter, duration)
 
-    up.upload_video(f'output/{counter}.mp4', story)
+
+    print("Uploading to youtube")
+    #up.upload_video(f'output/{counter}.mp4', story)
     
     
     counter += 1

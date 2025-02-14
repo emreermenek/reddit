@@ -41,4 +41,10 @@ def create_video(duration : int, counter : int):
     clip = CompositeVideoClip([clip, watermark])
 
     # Write the final video to a file
-    clip.write_videofile(f"videos/{counter}.mp4", codec="libx264", audio_codec="aac", audio=False)
+    clip.write_videofile(
+        f"videos/{counter}.mp4", 
+        codec="h264_nvenc",  # NVENC ile hızlandırılmış H.264 encoding
+        preset="p4", 
+        #codec="libx264", 
+        audio_codec="aac", 
+        audio=False)
