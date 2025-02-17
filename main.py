@@ -7,6 +7,7 @@ from mutagen.mp3 import MP3
 import shutil
 import voice as vo
 from TTS.api import TTS
+import torch
 
 # Klasörler varsa sil
 if os.path.exists('audios'):
@@ -42,28 +43,29 @@ for story in filtered_stories:
             continue
 
 
-    
+    #first step
     print("creating audio")
  # creating audio   
     text = story['selftext']
     vo.create_audio(text, counter, tts)
+    torch.cuda.synchronize()
     
     #creating video by looking how long audio is
-
+    #second step
     print("creating video")
     audio = MP3(f"audios/{counter}.mp3")  # Replace with your file name
     duration = audio.info.length  # Duration in seconds
     vid.create_video(duration, counter)
+    torch.cuda.synchronize()
 
-
-    
+    #third step
     #creating subtitle and merging everyting
     print("creating output")
     sub.usage(counter, duration)
-
+    torch.cuda.synchronize()
 
     print("Uploading to youtube")
-    #up.upload_video(f'output/{counter}.mp4', story)
+    up.upload_video(f'output/{counter}.mp4', story)
     
     
     counter += 1

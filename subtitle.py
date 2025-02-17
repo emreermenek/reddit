@@ -20,7 +20,7 @@ ScaledBorderAndShadow: yes
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Default,Montserrat ExtraBold,22,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,1,0,0,0,100,100,0,0,1,3,0,5,10,10,50,0
+Style: Default,Montserrat ExtraBold,18,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,1,0,0,0,100,100,0,0,1,3,0,5,10,10,50,0
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
@@ -59,7 +59,7 @@ def add_audio_and_subtitles(video_path: str, audio_path: str, subtitle_path: str
     # Videodaki mevcut sesi al
     original_audio = input_audio.audio
     #new_audio = input_music_audio.audio.filter("volume", 0.3)
-    new_audio = input_music_audio.audio.filter("atrim", duration=duration+2).filter("volume", 0.1)
+    new_audio = input_music_audio.audio.filter("atrim", duration=duration+2).filter("volume", 0.05)
     # İki sesi birleştir
     mixed_audio = ffmpeg.filter([original_audio, new_audio], "amix", inputs=2, duration="longest", dropout_transition=2)
     
@@ -69,13 +69,19 @@ def add_audio_and_subtitles(video_path: str, audio_path: str, subtitle_path: str
         mixed_audio,
         output_path,
         vcodec="h264_nvenc",  # NVENC hızlandırma
-        preset="p4",  # Daha hızlı encoding (Alternatif: "p7" daha kaliteli ama yavaş)
+        preset="p7",  # Daha hızlı encoding (Alternatif: "p7" daha kaliteli ama yavaş)
         rc="vbr",  # Değişken bit hızı (daha verimli)
         #vcodec="libx264", #cpu kullanmak icin codec
         acodec="aac",
         #audio_bitrate="192k",
         format="mp4",
-        **{"map": "0:v:0", "map": "1:a:0"}
+        **{
+            "b:v": "8M",     # 8 Mbps bitrate
+            "maxrate": "10M",# Maksimum bitrate
+            "bufsize": "16M",
+            "map": "0:v:0", 
+            "map": "1:a:0"
+            }
     )
     
     output.run(overwrite_output=True)

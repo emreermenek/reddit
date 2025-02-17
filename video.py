@@ -44,7 +44,9 @@ def create_video(duration : int, counter : int):
     clip.write_videofile(
         f"videos/{counter}.mp4", 
         codec="h264_nvenc",  # NVENC ile hızlandırılmış H.264 encoding
-        preset="p4", 
+        preset="p7", 
         #codec="libx264", 
         audio_codec="aac", 
-        audio=False)
+        audio=False,
+        ffmpeg_params=["-b:v", "8M", "-maxrate", "10M", "-bufsize", "16M"]
+        )
